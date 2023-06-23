@@ -3,71 +3,66 @@ function loadFile(input) {
     var allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
     var fileExtension = file.name.split('.').pop().toLowerCase();
 
-  if (allowedExtensions.includes(fileExtension)) {
-      var formData = new FormData();
-      formData.append('imageFile', file);
+    if (allowedExtensions.includes(fileExtension)) {
+        var formData = new FormData();
+        formData.append('imageFile', file);
 
-      // 미리 만들어 놓은 div에 text(파일 이름) 추가
-      $('#fileName').text(file.name);
-  
-      // 새로운 이미지 생성
-      var newImage = $('<img>').addClass('img');
-  
-      // 이미지 source 가져오기
-      newImage.attr('src', URL.createObjectURL(file));
-  
-      newImage.css({
-        width: '70%',
-        height: '70%',
-        objectFit: 'contain',
-        visibility: 'hidden' // 초기에는 숨겨진 상태로 설정
-      });
-  
-      // 이미지를 image-show div에 추가
-      $('#image-show').empty().append(newImage);
-  
-      newImage.on('load', function () {
-        newImage.css('visibility', 'visible'); // 이미지 로딩 완료 후 보이도록 설정
-      });
-      
-      $.ajax({
-        url:"/img_barcode",
-        type:"post",
-        processData: false,
-        contentType: false,
-        data:formData,
-        beforeSend:function(){
-            $('#loading-overlay_default').css('display', 'flex');
-        },
-        success:function(result){
-            $('#loading-overlay_default').css('display', 'none');
-            if(result.result){
-                if(result.book_code == "8"){
-                    var qs = $.param(result);
-                    window.location.href = "/barcode?"+ qs+"#home";
+        $('#fileName').text(file.name);
+        // 새로운 이미지 생성
+        var newImage = $('<img>').addClass('img');
+        // 이미지 source 가져오기
+        newImage.attr('src', URL.createObjectURL(file));
+    
+        newImage.css({
+            width: '70%',
+            height: '70%',
+            objectFit: 'contain',
+            visibility: 'hidden'
+        });
+    
+        // 이미지를 image-show div에 추가
+        $('#image-show').empty().append(newImage);
+    
+        newImage.on('load', function () {
+            newImage.css('visibility', 'visible'); // 이미지 로딩 완료 후 보이도록 설정
+        });
+        
+        $.ajax({
+            url:"/img_barcode",
+            type:"post",
+            processData: false,
+            contentType: false,
+            data:formData,
+            beforeSend:function(){
+                $('#loading-overlay_default').css('display', 'flex');
+            },
+            success:function(result){
+                $('#loading-overlay_default').css('display', 'none');
+                if(result.result){
+                    if(result.book_code == "8"){
+                        var qs = $.param(result);
+                        window.location.href = "/barcode?"+ qs+"#home";
+                    }else{
+                        alert("문학 책만 추천이 가능합니다.");
+                        $('#fileName').text("");
+                        $('#image-show').children('.img').remove();
+                    }
                 }else{
-                    alert("문학 책만 추천이 가능합니다.");
+                    alert("바코드를 인식할 수 없습니다.");
                     $('#fileName').text("");
                     $('#image-show').children('.img').remove();
                 }
-            }else{
-                alert("바코드를 인식할 수 없습니다.");
-                $('#fileName').text("");
-                $('#image-show').children('.img').remove();
+            },
+            error:function(){
+                $('#loading-overlay_default').css('display', 'none');
             }
-        },
-        error:function(){
-            $('#loading-overlay_default').css('display', 'none');
-        }
-      })
-  }else{
-      alert('이미지 파일만 업로드 가능합니다.');
-  }
+        })
+    }else{
+        alert('이미지 파일만 업로드 가능합니다.');
+    }
 };
 
 $(document).ready(function () {
-    var dropArea = $('#barcode');
-    var dropEvent = $('.button');
     $(document).on('drop', 'body', function(e){
             e.preventDefault();
             $('.button').removeClass('dragging');

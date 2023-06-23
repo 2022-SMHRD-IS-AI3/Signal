@@ -55,8 +55,6 @@ def pick_cluster(request:Request, item:str):
     title_List = db.random_title_list(label)
     keyword_list = db.random_keyword_list(label)
     text_list = title_List+keyword_list
-    # 이 라벨로 DB와 연결 후 랜덤 5개 제목, 랜덤 5개 키워드 추출 후 리턴
-    # 비동기로 5번 키워드 추출 - 랜덤 소설의 키워드 랜덤 하나씩 총 5개
     return {"textList" :text_list}
 
 # DB에서 라벨에 맞는 제목이 word와 같은게 있으면 title로, 없으면 keyword로
@@ -90,7 +88,6 @@ def item_title(request:Request, item:str, word:str):
             "novel_cover": result[4]
         }
         go = "title"
-        # DB에서 라벨에 맞는 제목이 word와 같은게 있으면 title로, 없으면 keyword로
         return templates.TemplateResponse('04_List_title.html', {"request" : request, "data":data, "go":go})
     
 @app.get('/label/keyword')
@@ -120,7 +117,6 @@ async def img_barcode(imageFile: UploadFile):
 # ajax 텍스트로 isbn 입력 
 @app.get("/input_isbn")
 async def input_isbn(isbn: str):
-    print(isbn)
     result = crawling_isbn(isbn)
     if result['isData']:
         data = {

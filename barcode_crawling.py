@@ -3,24 +3,17 @@ from bs4 import BeautifulSoup as bs
 import re
 
 def crawling_isbn(isbn:str):
-    print(f"크롤링 시작 {isbn}")
     isbn = isbn # 수집한 isbn
     url = 'https://dl.nanet.go.kr/search/searchInnerList.do'
     data = {
         "searchType" :  "INNER_SEARCH",
-        #"searchQuery" : "+9791190299770",
         "resultType" : "INNER_SEARCH_DETAIL",
         "queryText":f"{isbn}:ALL:AND", # isbn 검색
         "selZone":"ALL",
         "dpBranch":"ALL",
         "synonymYn" :"Y",
-        #"asideState":"true",
-        #"hanjaYn":"Y",
-        #"totalSizeByMenu" : 1,
-        #"totalSize":1,
         "searchMethod" : "L",
         "searchClass":"S",
-        #"prevQueryText":"9791190299770:ALL:AND"
     }
     res = req.post(url,data=data)
     soup = bs(res.text,'lxml')

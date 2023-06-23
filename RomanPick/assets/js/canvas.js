@@ -26,7 +26,7 @@ function create_canvas(textList, label){
                 this.x += this.speedX;
                 this.y += this.speedY;
             }
-            // 캔버스 경계 체크
+
             if (this.x < 0 || this.x+this.width > canvas.width) {
                 this.speedX *= -1;
             }
@@ -59,11 +59,7 @@ function create_canvas(textList, label){
             this.isStopped = false;
         }
     }
-
-    // 요소의 크기를 가져와서 캔버스 크기로 설정
     var texts = textList;
-    
-    
     var textElements = [];
 
     // 텍스트 스타일 설정
